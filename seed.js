@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = require('./models/User');
 
 mongoose.connect('mongodb+srv://moumiedibinga:tmiUoPH6d3yrbWSG@rent-app.21fte9i.mongodb.net/?retryWrites=true&w=majority&appName=rent-app');
@@ -14,7 +15,12 @@ const seedUsers = async () => {
   ];
 
   for (const userData of users) {
-    const user = new User(userData);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const user = new User({
+      username: userData.username,
+      password: hashedPassword,
+      role: userData.role
+    });
     await user.save();
     console.log(`Created user: ${user.username} (${user.role})`);
   }

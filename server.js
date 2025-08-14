@@ -1,21 +1,20 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const User = require('./models/User');
-
 const authRoutes = require('./routes/auth');
-app.use('/', authRoutes);
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/User'); // Adjust path if needed
 
 const app = express();
-mongoose.connect('mongodb://localhost/rent-app');
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(session({ secret: 'yourSecret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/', authRoutes);
 
 passport.use(new LocalStrategy(async (username, password, done) => {
   const user = await User.findOne({ username });
@@ -27,4 +26,11 @@ passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   const user = await User.findById(id);
   done(null, user);
+});
+
+require('dotenv').config();
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
