@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const User = require('./models/User');
 
-mongoose.connect('mongodb+srv://moumiedibinga:tmiUoPH6d3yrbWSG@rent-app.21fte9i.mongodb.net/?retryWrites=true&w=majority&appName=rent-app');
+require('dotenv').config();
+mongoose.connect(process.env.MONGO_URI);
 
 const seedUsers = async () => {
-  await User.deleteMany({}); // Clear existing users
+  await User.deleteMany(); // Clear existing users
 
   const users = [
     { username: 'tenant1', password: 'pass123', role: 'tenant' },
@@ -14,7 +15,11 @@ const seedUsers = async () => {
   ];
 
   for (const userData of users) {
-    const user = new User(userData); // Let the model hash the password
+    const user = new User({
+      username: userData.username.toLowerCase(), // Normalize username
+      password: userData.password,
+      role: userData.role
+    });
     await user.save();
     console.log(`Created user: ${user.username} (${user.role})`);
   }

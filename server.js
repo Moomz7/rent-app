@@ -17,11 +17,20 @@ app.use(passport.session());
 app.use('/', authRoutes);
 
 passport.use(new LocalStrategy(async (username, password, done) => {
-  const user = await User.findOne({ username });
-  if (!user || !(await user.isValidPassword(password))) return done(null, false);
+  console.log('Login attempt:', username);
+  const user = await User.findOne({ username: username.trim().toLocaleLowerCase() });
+  if (!user) {
+    console.log('User not found');
+    return done(null, false);
+  }
+  const isValid = await user.isValidPassword(password);
+  if (!isValid) {
+    console.log('Invalid password');
+    return done(null, false);
+  }
+  console.log('Login successful');
   return done(null, user);
 }));
-
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   const user = await User.findById(id);
