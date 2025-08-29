@@ -37,6 +37,15 @@ passport.deserializeUser(async (id, done) => {
   done(null, user);
 });
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.redirect('/login.html');
+}
+
+app.get('/rent.html', ensureAuthenticated, (req, res) => {
+  res.sendFile(__dirname + '/public/rent.html');
+});
+
 require('dotenv').config();
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
