@@ -33,8 +33,12 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 }));
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
 function ensureAuthenticated(req, res, next) {
@@ -42,12 +46,29 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login.html');
 }
 
-app.get('/rent.html', ensureAuthenticated, (req, res) => {
-  res.sendFile(__dirname + '/public/rent.html');
+const path = require('path');
+
+app.get('/tenant-portal.html', ensureAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tenant-portal.html'));
 });
 
 require('dotenv').config();
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+function ensureLandlord(req, res, next) {
+  if (req.isAuthenticated() && req.user.role === 'landlord') return next();
+  res.redirect('/login.html');
+}
+
+app.get('/landlord-dashboard.html', ensureLandlord, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'landlord-dashboard.html'));
+});
+
+app.get('/logout', (req, res) => {
+  req.logout(() => {
+    res.redirect('/login.html');
+  });
+});
 
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');

@@ -2,13 +2,13 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 
-router.post('/login', passport.authenticate('local', {
-  failureRedirect: '/login.html?error=true',
-}), (req, res) => {
+router.post('/login', passport.authenticate('local'), (req, res) => {
   if (req.user.role === 'landlord') {
-    res.redirect('/landlord.html');
+    res.redirect('/landlord-dashboard.html');
+  } else if (req.user.role === 'tenant') {
+    res.redirect('/tenant-portal.html');
   } else {
-    res.redirect('/rent.html');
+    res.redirect('/login.html?error=unknown-role');
   }
 });
 
