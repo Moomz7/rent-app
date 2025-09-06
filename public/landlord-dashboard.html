@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Landlord Dashboard</title>
+  <link rel="stylesheet" href="styles/dashboard.css" />
+</head>
+<body>
+  <header>
+    <h1>Landlord Dashboard</h1>
+    <nav>
+      <ul>
+        <li><a href="#tenants">View Tenants</a></li>
+        <li><a href="#requests">Repair Requests</a></li>
+        <li><a href="#payments">Payment History</a></li>
+        <li><a href="/logout" id="logout-link">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="tenants">
+      <h2>Tenant List</h2>
+      <div id="tenant-list">Loading tenants...</div>
+    </section>
+
+    <section id="requests">
+      <h2>Repair Requests</h2>
+      <div class="request-controls">
+        <label><input type="checkbox" id="filter-unresolved" /> Show only unresolved requests</label>
+        <label><input type="checkbox" id="sort-by-date" /> Sort by newest first</label>
+      </div>
+      <div id="repair-requests">Loading requests...</div>
+    </section>
+
+    <section id="payments">
+      <h2>Recent Payments</h2>
+      <div id="payment-history">Loading payments...</div>
+    </section>
+  </main>
+
+  <!-- Modal for Request Details -->
+  <div id="request-modal" class="modal hidden">
+    <div class="modal-content">
+      <span id="close-modal" class="close">&times;</span>
+      <h3>Repair Request Details</h3>
+      <p id="modal-tenant"></p>
+      <p id="modal-issue"></p>
+      <p id="modal-status"></p>
+      <p id="modal-date"></p>
+    </div>
+  </div>
+
+  <script src="scripts/landlord.js" defer></script>
+</body>
+</html>

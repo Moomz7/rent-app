@@ -2,23 +2,31 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const authRoutes = require('./routes/auth');
+const path = require('path');
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('./models/User'); // Adjust path if needed
+const User = require('./models/User');
+const authRoutes = require('./routes/auth');
+const landlordRoutes = require('./routes/landlord');
+
+require('dotenv').config();
 
 const app = express();
 
+// Middleware setup
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: 'yourSecret', resave: false, saveUninitialized: false }));
+app.use(session({
+  secret: 'yourSecret',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', authRoutes);
-
+// Passport strategy
 passport.use(new LocalStrategy(async (username, password, done) => {
   console.log('Login attempt:', username);
-  const user = await User.findOne({ username: username.trim().toLocaleLowerCase() });
+  const user = await User.findOne({ username: username.trim().toLowerCase() });
   if (!user) {
     console.log('User not found');
     return done(null, false);
@@ -31,6 +39,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
   console.log('Login successful');
   return done(null, user);
 }));
+
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
@@ -41,35 +50,59 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+// Role-based access middleware
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect('/login.html');
 }
 
-const path = require('path');
-
-app.get('/tenant-portal.html', ensureAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'tenant-portal.html'));
-});
-
-require('dotenv').config();
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
 function ensureLandlord(req, res, next) {
+  console.log('User:', req.user); // 👀 See what’s in the session
   if (req.isAuthenticated() && req.user.role === 'landlord') return next();
   res.redirect('/login.html');
 }
+
+// Routes
+app.use('/', authRoutes);        // Handles login, registration, etc.
+app.use('/', landlordRoutes);   // Handles landlord API routes
+
+// Role-based dashboard access
+app.get('/tenant-portal.html', ensureAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'tenant-portal.html'));
+});
 
 app.get('/landlord-dashboard.html', ensureLandlord, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'landlord-dashboard.html'));
 });
 
+// Role-based redirect after login
+app.post('/login',
+  passport.authenticate('local', {
+    failureRedirect: '/login.html'
+  }),
+  (req, res) => {
+    if (req.user.role === 'landlord') {
+      res.redirect('/landlord-dashboard.html');
+    } else {
+      res.redirect('/tenant-portal.html');
+    }
+  }
+);
+
+// Logout route
 app.get('/logout', (req, res) => {
   req.logout(() => {
-    res.redirect('/login.html');
+    res.redirect('/login.html?loggedOut=true');
   });
 });
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// Start server
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
