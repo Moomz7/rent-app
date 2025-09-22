@@ -3,6 +3,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const requestList = document.getElementById('repair-requests');
   const paymentHistory = document.getElementById('payment-history');
 
+  const welcomeMessage = document.getElementById('welcome-message');
+
+  try {
+    const userRes = await fetch('/api/current-user');
+    const user = await userRes.json();
+    welcomeMessage.textContent = `Welcome back, ${user.username}!`;
+  } catch {
+    welcomeMessage.textContent = 'Welcome back!';
+  }
+
   try {
     // Fetch tenants
     const tenants = await fetch('/api/tenants').then(res => res.json());

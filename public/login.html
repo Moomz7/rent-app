@@ -10,30 +10,20 @@
 <body>
   <div class="login-container">
     <h2>Sign In</h2>
-  <form method="POST" action="/login">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" style="text-transform: lowercase;" required />
+    <form method="POST" action="/login">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" style="text-transform: lowercase;" required />
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
 
-    <button type="submit">Login</button>
-  </form>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don’t have an account? <a href="/signup.html">Sign up here</a></p>
   </div>
-  <p id="error-msg" style="color: red;"></p>
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('loggedOut')) {
-      const toast = document.getElementById('toast');
-      toast.classList.remove('hidden');
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-  });
-</script>
-<div id="toast" class="toast hidden">You’ve been logged out successfully.</div>
+
+  <div id="toast" class="toast hidden">You’ve been logged out successfully.</div>
+
+  <script src="scripts/login.js" defer></script>
 </body>
 </html>

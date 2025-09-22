@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="styles/auth.css" />
+</head>
+<body>
+  <h1>Create an Account</h1>
+  <form method="POST" action="/signup">
+    <label>Username: <input type="text" name="username" required /></label><br />
+    <label>Password: <input type="password" name="password" required /></label><br />
+    <label>Role:
+      <select name="role" required>
+        <option value="tenant">Tenant</option>
+        <option value="landlord">Landlord</option>
+      </select>
+    </label><br />
+    <button type="submit">Sign Up</button>
+  </form>
+  <p>Already have an account? <a href="/login.html">Log in</a></p>
+</body>
+</html>

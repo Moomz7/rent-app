@@ -20,7 +20,22 @@
   </header>
 
   <main>
+
+    <section id="greeting">
+      <h2 id="welcome-message">Welcome back!</h2>
+    </section>
+
+    <section id="summary">
+      <h2>Dashboard Summary</h2>
+      <div id="summary-cards">
+        <div class="card" id="tenant-count">Tenants: ...</div>
+        <div class="card" id="request-count">Open Requests: ...</div>
+        <div class="card" id="payment-count">Payments This Month: ...</div>
+      </div>
+    </section>
+
     <section id="tenants">
+      <input type="text" id="tenant-search" placeholder="Search tenants..." />
       <h2>Tenant List</h2>
       <div id="tenant-list">Loading tenants...</div>
     </section>

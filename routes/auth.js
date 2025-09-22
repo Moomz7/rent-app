@@ -1,14 +1,22 @@
 const express = require('express');
-const passport = require('passport');
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
 
-router.post('/login', passport.authenticate('local'), (req, res) => {
-  if (req.user.role === 'landlord') {
-    res.redirect('/landlord-dashboard.html');
-  } else if (req.user.role === 'tenant') {
-    res.redirect('/tenant-portal.html');
-  } else {
-    res.redirect('/login.html?error=unknown-role');
+router.post('/signup', async (req, res) => {
+  const { username, password, role } = req.body;
+  try {
+    const normalizedUsername = username.trim().toLowerCase();
+    const existing = await User.findOne({ username: normalizedUsername });
+    if (existing) return res.redirect('/signup.html?error=exists');
+
+    const user = new User({ username: normalizedUsername, password, role });
+    await user.save();
+    console.log('User saved:', normalizedUsername);
+    res.redirect('/login.html?signup=success');
+  } catch (err) {
+    console.error('Signup error:', err);
+    res.redirect('/signup.html?error=server');
   }
 });
 

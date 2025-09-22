@@ -1,21 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const Request = require('../models/Request'); // Assuming you have a model
-const Payment = require('../models/Payment'); // Assuming you have a model
-
-router.post('/api/requests/:id/resolve', ensureLandlord, async (req, res) => {
-  try {
-    const request = await Request.findByIdAndUpdate(
-      req.params.id,
-      { status: 'Resolved' },
-      { new: true }
-    );
-    res.json(request);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to update request' });
-  }
-});
+const Request = require('../models/Request');
+const Payment = require('../models/Payment');
 
 function ensureLandlord(req, res, next) {
   if (req.isAuthenticated() && req.user.role === 'landlord') return next();
@@ -35,6 +22,23 @@ router.get('/api/requests', ensureLandlord, async (req, res) => {
 router.get('/api/payments', ensureLandlord, async (req, res) => {
   const payments = await Payment.find().sort({ date: -1 }).limit(10);
   res.json(payments);
+});
+
+router.post('/api/requests/:id/resolve', ensureLandlord, async (req, res) => {
+  try {
+    const request = await Request.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Resolved' },
+      { new: true }
+    );
+    res.json(request);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update request' });
+  }
+});
+
+router.get('/api/current-user', ensureLandlord, (req, res) => {
+  res.json({ username: req.user.username });
 });
 
 module.exports = router;

@@ -78,7 +78,7 @@ app.get('/landlord-dashboard.html', ensureLandlord, (req, res) => {
 // Role-based redirect after login
 app.post('/login',
   passport.authenticate('local', {
-    failureRedirect: '/login.html'
+    failureRedirect: '/login.html?error=invalid'
   }),
   (req, res) => {
     if (req.user.role === 'landlord') {
