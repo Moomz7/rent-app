@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
   password: String,
   role: { type: String, enum: ['tenant', 'landlord'], required: true },
   resetToken: String,
-  resetTokenExpires: Date
+  resetTokenExpires: Date,
+  monthlyRent: { type: Number, default: 0 }, // Only for tenants
+  leaseStart: { type: Date } // Only for tenants
 });
 
 // ✅ Hash password before saving
@@ -30,5 +32,10 @@ userSchema.methods.generateResetToken = function () {
   this.resetTokenExpires = Date.now() + 3600000; // 1 hour
   return token;
 };
+
+// Indexes
+userSchema.index({ username: 1 }, { unique: true });
+userSchema.index({ role: 1 });
+userSchema.index({ resetTokenExpires: 1 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -51,6 +51,55 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error(err);
   }
 
+async function loadRequests() {
+  const res = await fetch('/api/requests');
+  const requests = await res.json();
+
+  const container = document.getElementById('requests-container');
+  container.innerHTML = '';
+
+  requests.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'request-card';
+    div.innerHTML = `
+      <p><strong>${r.tenant}</strong> reported: ${r.issue}</p>
+      <p>Status: ${r.status}</p>
+      <button data-id="${r._id}" class="resolve-btn">Mark Resolved</button>
+    `;
+    container.appendChild(div);
+  });
+
+  // Attach resolve handlers
+  document.querySelectorAll('.resolve-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const res = await fetch(`/api/requests/${id}/resolve`, { method: 'POST' });
+      const updated = await res.json();
+      btn.parentElement.querySelector('p:nth-child(2)').textContent = `Status: ${updated.status}`;
+      btn.remove(); // remove button after resolving
+    });
+  });
+}
+
+async function loadPayments() {
+  const res = await fetch('/api/payments');
+  const payments = await res.json();
+
+  const container = document.getElementById('payments-container');
+  container.innerHTML = '<h3>Recent Payments</h3>';
+
+  payments.forEach(p => {
+    const entry = document.createElement('p');
+    entry.textContent = `${p.username} paid $${p.amount.toFixed(2)} on ${new Date(p.date).toLocaleDateString()}`;
+    container.appendChild(entry);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadRequests();
+  loadPayments();
+});
+
   // Logout confirmation
   const logoutLink = document.getElementById('logout-link');
   if (logoutLink) {

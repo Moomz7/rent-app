@@ -2,15 +2,42 @@ document.addEventListener('DOMContentLoaded', () => {
   let rentBalance = 1200;
   document.getElementById('rent-balance').textContent = `$${rentBalance.toFixed(2)}`;
 
-  document.getElementById('payment-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('amount').value);
-    if (isNaN(amount) || amount <= 0) return;
 
-    rentBalance -= amount;
-    document.getElementById('rent-balance').textContent = `$${Math.max(rentBalance, 0).toFixed(2)}`;
-    document.getElementById('receipt').textContent = `✅ Payment of $${amount.toFixed(2)} received.`;
-    document.getElementById('amount').value = '';
+  // Stripe payment
+  document.getElementById('pay-stripe').addEventListener('click', async function () {
+    const amount = document.getElementById('amount').value;
+    if (!amount || isNaN(amount) || amount <= 0) return alert('Enter a valid amount');
+    const res = await fetch('/api/create-stripe-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Failed to start Stripe payment');
+    }
+  });
+
+  // PayPal payment
+  document.getElementById('pay-paypal').addEventListener('click', async function () {
+    const amount = document.getElementById('amount').value;
+    if (!amount || isNaN(amount) || amount <= 0) return alert('Enter a valid amount');
+    const res = await fetch('/api/create-paypal-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount })
+    });
+    const data = await res.json();
+    if (data && data.links) {
+      const approve = data.links.find(l => l.rel === 'approve');
+      if (approve) {
+        window.location.href = approve.href;
+        return;
+      }
+    }
+    alert('Failed to start PayPal payment');
   });
 
   document.getElementById('request-form').addEventListener('submit', function (e) {
@@ -24,6 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
     list.appendChild(item);
     document.getElementById('request').value = '';
   });
+
+// Payment
+document.getElementById('payment-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const amount = document.getElementById('amount').value;
+
+  const res = await fetch('/api/payments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount })
+  });
+
+  const data = await res.json();
+  showToast(data.success ? '✅ Payment received!' : '❌ Payment failed');
+});
+
+// Repair Request
+document.getElementById('request-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const description = document.getElementById('request').value;
+
+  const res = await fetch('/api/repair-requests', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ description })
+  });
+
+  const data = await res.json();
+  showToast(data && !data.error ? '✅ Request submitted!' : '❌ Request failed');
+});
 
   const logoutLink = document.getElementById('logout-link');
   if (logoutLink) {

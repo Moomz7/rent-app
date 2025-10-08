@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tenant Portal</title>
-  <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="styles/dashboard.min.css">
 </head>
 <body>
   <header>
@@ -25,12 +25,16 @@
       <p id="rent-balance">$0.00</p>
     </section>
     
+
     <section id="payment">
       <h2>Make a Payment</h2>
       <form id="payment-form">
         <label for="amount">Amount:</label>
         <input type="number" id="amount" name="amount" required>
-        <button type="submit">Pay Now</button>
+        <div style="margin: 1em 0;">
+          <button type="button" id="pay-stripe">Pay with Card (Stripe)</button>
+          <button type="button" id="pay-paypal">Pay with PayPal</button>
+        </div>
       </form>
       <div id="receipt"></div>
     </section>

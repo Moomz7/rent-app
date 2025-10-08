@@ -161,3 +161,17 @@ button:hover {
     padding: 1rem;
   }
 }
+
+.request-card {
+  background: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ff9800;
+}
+.resolve-btn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+}
