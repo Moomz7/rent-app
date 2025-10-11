@@ -1,3 +1,7 @@
+// Root route redirects to login
+app.get('/', (req, res) => {
+  res.redirect('/login.html');
+});
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
