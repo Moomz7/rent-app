@@ -1,3 +1,4 @@
+// ...existing code...
 // Root route redirects to login
 app.get('/', (req, res) => {
   res.redirect('/login.html');
