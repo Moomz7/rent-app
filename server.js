@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -19,7 +20,10 @@ app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'yourSecret',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -109,6 +113,6 @@ app.get('/logout', (req, res) => {
 mongoose.connect(process.env.MONGO_URI);
 
 // Start server
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running on http://localhost:' + (process.env.PORT || 3000));
 });
