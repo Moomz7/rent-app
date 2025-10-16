@@ -21,7 +21,7 @@
     "mongoose": "^8.17.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "stripe": "^19.0.0"
+    "stripe": "^19.1.0"
   },
   "devDependencies": {
     "cssnano-cli": "^1.0.5",

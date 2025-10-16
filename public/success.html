@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Rent App</title>
+    <link rel="stylesheet" href="styles/auth.css">
+    <style>
+        .success-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            color: #28a745;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .success-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .payment-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .btn-container {
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .loading {
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">✅</div>
+        <h1 class="success-title">Payment Successful!</h1>
+        
+        <div class="success-message">
+            <p>Thank you for your payment! Your transaction has been completed successfully.</p>
+            <p>You will receive a confirmation email shortly with your payment receipt.</p>
+        </div>
+        
+        <div class="payment-details" id="payment-details">
+            <div class="loading" id="loading">Loading payment details...</div>
+            <div id="details-content" style="display: none;">
+                <h3>Payment Details</h3>
+                <div class="detail-row">
+                    <span><strong>Session ID:</strong></span>
+                    <span id="session-id">-</span>
+                </div>
+                <div class="detail-row">
+                    <span><strong>Amount:</strong></span>
+                    <span id="amount">-</span>
+                </div>
+                <div class="detail-row">
+                    <span><strong>Payment Method:</strong></span>
+                    <span id="payment-method">Card</span>
+                </div>
+                <div class="detail-row">
+                    <span><strong>Date:</strong></span>
+                    <span id="payment-date">-</span>
+                </div>
+                <div class="detail-row">
+                    <span><strong>Status:</strong></span>
+                    <span id="status" style="color: #28a745; font-weight: bold;">Completed</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-container">
+            <a href="/tenant-portal.html" class="btn btn-primary">Return to Dashboard</a>
+            <a href="/api/payments" class="btn btn-secondary">View Payment History</a>
+        </div>
+    </div>
+
+    <script>
+        // Get session ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        if (sessionId) {
+            document.getElementById('session-id').textContent = sessionId;
+            document.getElementById('loading').style.display = 'block';
+            
+            // You can fetch additional payment details here if needed
+            // For now, we'll just show the session ID and current date
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('details-content').style.display = 'block';
+                document.getElementById('payment-date').textContent = new Date().toLocaleDateString();
+            }, 1000);
+        } else {
+            document.getElementById('payment-details').style.display = 'none';
+        }
+        
+        // Auto-redirect to dashboard after 30 seconds
+        setTimeout(() => {
+            if (confirm('Would you like to return to your dashboard?')) {
+                window.location.href = '/tenant-portal.html';
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

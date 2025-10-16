@@ -7,16 +7,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pay-stripe').addEventListener('click', async function () {
     const amount = document.getElementById('amount').value;
     if (!amount || isNaN(amount) || amount <= 0) return alert('Enter a valid amount');
-    const res = await fetch('/api/create-stripe-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount })
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert('Failed to start Stripe payment');
+    
+    try {
+      const res = await fetch('/api/create-stripe-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          amount,
+          description: `Rent Payment - $${amount}`
+        })
+      });
+      
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Failed to start Stripe payment');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Network error. Please try again.');
     }
   });
 

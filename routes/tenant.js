@@ -13,29 +13,103 @@ const paypalEnv = new paypal.core.SandboxEnvironment(
 );
 const paypalClient = new paypal.core.PayPalHttpClient(paypalEnv);
 
+// Stripe webhook endpoint (no authentication required for webhooks)
+router.post('/webhook/stripe', express.raw({type: 'application/json'}), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    // Verify webhook signature (you should set STRIPE_WEBHOOK_SECRET in your .env file)
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.log(`Webhook signature verification failed:`, err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object;
+      console.log('Payment successful:', session.id);
+      
+      try {
+        // Save payment to database
+        const payment = new Payment({
+          username: session.metadata.username,
+          amount: session.metadata.original_amount,
+          stripeSessionId: session.id,
+          paymentMethod: 'stripe',
+          status: 'completed'
+        });
+        
+        await payment.save();
+        console.log('Payment saved to database:', payment.id);
+      } catch (err) {
+        console.error('Error saving payment to database:', err);
+      }
+      break;
+      
+    case 'payment_intent.payment_failed':
+      const paymentIntent = event.data.object;
+      console.log('Payment failed:', paymentIntent.id);
+      break;
+      
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+  res.json({received: true});
+});
+
 // Create Stripe Checkout session
 router.post('/api/create-stripe-session', ensureTenant, async (req, res) => {
   try {
+    const { amount, description } = req.body;
+    
+    // Validate input
+    if (!amount || isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Valid payment amount is required' });
+    }
+    
+    const paymentAmount = Math.round(Number(amount) * 100); // Convert to cents
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
             currency: 'usd',
-            product_data: { name: 'Rent Payment' },
-            unit_amount: Math.round(Number(req.body.amount) * 100),
+            product_data: { 
+              name: description || 'Rent Payment',
+              description: `Rent payment for ${req.user.username}`
+            },
+            unit_amount: paymentAmount,
           },
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: req.body.successUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=success`,
-      cancel_url: req.body.cancelUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=cancel`,
-      metadata: { username: req.user.username },
+      success_url: `${req.protocol}://${req.get('host')}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.protocol}://${req.get('host')}/cancel.html`,
+      metadata: { 
+        username: req.user.username,
+        tenant_id: req.user._id.toString(),
+        payment_type: 'rent',
+        original_amount: amount
+      },
+      customer_email: req.user.email,
+      billing_address_collection: 'required',
     });
-    res.json({ url: session.url });
+    
+    console.log('Stripe session created:', session.id);
+    res.json({ url: session.url, session_id: session.id });
+    
   } catch (err) {
-    res.status(500).json({ error: 'Failed to create Stripe session' });
+    console.error('Stripe session creation error:', err);
+    res.status(500).json({ 
+      error: 'Failed to create Stripe session',
+      message: err.message 
+    });
   }
 });
 

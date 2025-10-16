@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled - Rent App</title>
+    <link rel="stylesheet" href="styles/auth.css">
+    <style>
+        .cancel-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cancel-icon {
+            font-size: 64px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        
+        .cancel-title {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .cancel-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #856404;
+        }
+        
+        .btn-container {
+            margin-top: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
+        
+        .help-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .help-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .help-section p {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="cancel-container">
+        <div class="cancel-icon">❌</div>
+        <h1 class="cancel-title">Payment Cancelled</h1>
+        
+        <div class="cancel-message">
+            <p>Your payment was cancelled and no charges were made to your account.</p>
+            <p>Don't worry - you can try again whenever you're ready!</p>
+        </div>
+        
+        <div class="info-box">
+            <strong>What happened?</strong><br>
+            You cancelled the payment process or navigated away from the payment page. 
+            Your rent payment is still pending and can be completed at any time.
+        </div>
+        
+        <div class="btn-container">
+            <a href="/tenant-portal.html" class="btn btn-success">Try Payment Again</a>
+            <a href="/tenant-portal.html" class="btn btn-primary">Return to Dashboard</a>
+        </div>
+        
+        <div class="help-section">
+            <h3>Need Help?</h3>
+            <p>
+                If you're experiencing issues with payments or have questions about your rent, 
+                please contact your landlord or submit a maintenance request through your tenant portal.
+            </p>
+            <p>
+                <strong>Common Payment Issues:</strong><br>
+                • Make sure your card has sufficient funds<br>
+                • Check that your billing information is correct<br>
+                • Ensure your card is not expired<br>
+                • Try using a different payment method
+            </p>
+        </div>
+        
+        <div class="btn-container">
+            <a href="mailto:support@rentapp.com" class="btn btn-secondary">Contact Support</a>
+        </div>
+    </div>
+
+    <script>
+        // Auto-redirect to tenant portal after 60 seconds
+        let countdown = 60;
+        const redirectTimer = setInterval(() => {
+            countdown--;
+            if (countdown <= 0) {
+                clearInterval(redirectTimer);
+                window.location.href = '/tenant-portal.html';
+            }
+        }, 1000);
+        
+        // Show countdown in console for debugging
+        console.log('Auto-redirecting to tenant portal in 60 seconds...');
+    </script>
+</body>
+</html>

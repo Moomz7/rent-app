@@ -10,6 +10,7 @@ const User = require('./models/User');
 const authRoutes = require('./routes/auth');
 const landlordRoutes = require('./routes/landlord');
 const tenantRoutes = require('./routes/tenant');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
