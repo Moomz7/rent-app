@@ -1,8 +1,3 @@
-// ...existing code...
-// Root route redirects to login
-app.get('/', (req, res) => {
-  res.redirect('/login.html');
-});
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
@@ -17,6 +12,11 @@ const landlordRoutes = require('./routes/landlord');
 const tenantRoutes = require('./routes/tenant');
 
 const app = express();
+
+// Root route redirects to login
+app.get('/', (req, res) => {
+  res.redirect('/login.html');
+});
 
 // Middleware setup
 app.use(express.static('public'));
