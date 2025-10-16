@@ -29,8 +29,8 @@ router.post('/api/create-stripe-session', ensureTenant, async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: req.body.successUrl || 'http://localhost:3000/tenant-portal.html?payment=success',
-      cancel_url: req.body.cancelUrl || 'http://localhost:3000/tenant-portal.html?payment=cancel',
+      success_url: req.body.successUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=success`,
+      cancel_url: req.body.cancelUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=cancel`,
       metadata: { username: req.user.username },
     });
     res.json({ url: session.url });
@@ -56,8 +56,8 @@ router.post('/api/create-paypal-order', ensureTenant, async (req, res) => {
       },
     ],
     application_context: {
-      return_url: req.body.successUrl || 'http://localhost:3000/tenant-portal.html?payment=success',
-      cancel_url: req.body.cancelUrl || 'http://localhost:3000/tenant-portal.html?payment=cancel',
+      return_url: req.body.successUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=success`,
+      cancel_url: req.body.cancelUrl || `${req.protocol}://${req.get('host')}/tenant-portal.html?payment=cancel`,
     },
   });
   try {
