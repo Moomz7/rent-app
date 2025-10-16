@@ -398,3 +398,967 @@ button:hover {
     font-size: 2rem;
   }
 }
+
+/* === Landlord Dashboard Styles === */
+
+/* Section Headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.tenant-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.tenant-controls input,
+.tenant-controls select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.tenant-controls .refresh-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tenant-controls .refresh-btn:hover {
+  background: #2980b9;
+  transform: rotate(180deg);
+}
+
+/* Summary Cards */
+.tenant-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.summary-card.alert {
+  border-left: 4px solid #e74c3c;
+}
+
+.summary-card.good {
+  border-left: 4px solid #27ae60;
+}
+
+.card-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.card-content p {
+  margin: 0.25rem 0 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Tenant Grid */
+.tenant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.tenant-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  border-left: 4px solid #3498db;
+}
+
+.tenant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.tenant-card.behind {
+  border-left-color: #e74c3c;
+}
+
+.tenant-card.ahead {
+  border-left-color: #27ae60;
+}
+
+.tenant-card.current {
+  border-left-color: #f39c12;
+}
+
+.tenant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.tenant-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.tenant-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.tenant-status.behind {
+  background: #fee;
+  color: #e74c3c;
+}
+
+.tenant-status.ahead {
+  background: #efe;
+  color: #27ae60;
+}
+
+.tenant-status.current {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.tenant-balance {
+  text-align: right;
+}
+
+.balance-amount {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.tenant-balance.behind .balance-amount {
+  color: #e74c3c;
+}
+
+.tenant-balance.ahead .balance-amount {
+  color: #27ae60;
+}
+
+.tenant-balance.current .balance-amount {
+  color: #f39c12;
+}
+
+.tenant-details {
+  border-top: 1px solid #eee;
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.detail-row .label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.detail-row .value {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.tenant-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.btn:not(.btn-secondary):not(.btn-success) {
+  background: #3498db;
+  color: white;
+}
+
+.btn:not(.btn-secondary):not(.btn-success):hover {
+  background: #2980b9;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #1e7e34;
+}
+
+/* Request Cards */
+.request-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-left: 4px solid #f39c12;
+  transition: all 0.2s ease;
+}
+
+.request-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.request-card.resolved {
+  border-left-color: #28a745;
+  opacity: 0.8;
+}
+
+.request-card.pending {
+  border-left-color: #e74c3c;
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.request-info h4 {
+  margin: 0 0 0.25rem 0;
+  color: #2c3e50;
+}
+
+.request-date {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.request-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.request-status.pending {
+  background: #fee;
+  color: #e74c3c;
+}
+
+.request-status.resolved {
+  background: #efe;
+  color: #28a745;
+}
+
+.request-description {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #3498db;
+}
+
+.request-description p {
+  margin: 0;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Payment Cards */
+.payment-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #28a745;
+  transition: all 0.2s ease;
+}
+
+.payment-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.payment-info h4 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.payment-method {
+  background: #e9ecef;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+  color: #495057;
+}
+
+.payment-amount {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.payment-date {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Utility Classes */
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #e74c3c;
+  background: #fee;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+}
+
+/* Toast Animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* === Financial Analytics Styles === */
+
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.analytics-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.analytics-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.1);
+  transform: skewY(-5deg) translateY(-50%);
+  transition: transform 0.3s ease;
+}
+
+.analytics-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+.analytics-card:hover::before {
+  transform: skewY(-5deg) translateY(0%);
+}
+
+.analytics-card.revenue {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.analytics-card.collection-rate {
+  background: linear-gradient(135deg, #007bff, #6f42c1);
+}
+
+.analytics-card.occupancy {
+  background: linear-gradient(135deg, #fd7e14, #e83e8c);
+}
+
+.analytics-card.pending-rent {
+  background: linear-gradient(135deg, #dc3545, #fd7e14);
+}
+
+.analytics-card .card-icon {
+  font-size: 2.5rem;
+  opacity: 0.9;
+  z-index: 1;
+  position: relative;
+}
+
+.analytics-card .card-content {
+  flex: 1;
+  z-index: 1;
+  position: relative;
+}
+
+.analytics-card .card-content h3 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.analytics-card .card-content p {
+  margin: 0 0 0.5rem 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.trend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+}
+
+.trend.positive {
+  background: rgba(40,167,69,0.3);
+}
+
+.trend.negative {
+  background: rgba(220,53,69,0.3);
+}
+
+/* Financial Overview */
+.financial-overview {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.overview-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.overview-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+.month-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.stat-item label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.stat-item span {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.revenue-bar {
+  margin-top: 1rem;
+}
+
+.revenue-progress {
+  height: 24px;
+  background: #e9ecef;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.collected-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  border-radius: 12px;
+  transition: width 0.8s ease;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.outstanding-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #dc3545, #fd7e14);
+  border-radius: 0 12px 12px 0;
+  transition: width 0.8s ease;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.revenue-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Quick Actions */
+.quick-actions {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  height: fit-content;
+}
+
+.quick-actions h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+.quick-actions .btn {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.quick-actions .btn:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive Design for Landlord Dashboard */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .tenant-controls {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .tenant-controls input,
+  .tenant-controls select {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .tenant-summary-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .tenant-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tenant-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .tenant-actions {
+    width: 100%;
+  }
+  
+  .tenant-actions .btn {
+    flex: 1;
+  }
+  
+  /* Analytics responsive adjustments */
+  .analytics-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .analytics-card {
+    padding: 1.5rem;
+  }
+  
+  .analytics-card .card-content h3 {
+    font-size: 1.8rem;
+  }
+  
+  .financial-overview {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .month-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-actions .btn {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Request management responsive */
+  .request-controls {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .filter-group,
+  .sort-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .filter-group select,
+  .filter-group input,
+  .sort-group select {
+    width: 100%;
+  }
+  
+  .request-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .requests-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Enhanced Request Management Styles === */
+
+.request-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stat-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stat-badge.pending {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.stat-badge.resolved {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.request-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-group,
+.sort-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-group select,
+.filter-group input,
+.sort-group select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.filter-group input {
+  min-width: 200px;
+}
+
+.requests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.request-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-left: 4px solid #3498db;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.request-card.priority-high {
+  border-left-color: #e74c3c;
+}
+
+.request-card.priority-medium {
+  border-left-color: #f39c12;
+}
+
+.request-card.priority-low {
+  border-left-color: #95a5a6;
+}
+
+.request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.request-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.request-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.request-date {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.time-ago {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+}
+
+.request-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.priority-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.priority-badge.high {
+  background: #fee;
+  color: #e74c3c;
+}
+
+.priority-badge.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.priority-badge.low {
+  background: #e2e3e5;
+  color: #6c757d;
+}
+
+.request-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.request-status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.request-status.resolved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.request-description {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #3498db;
+}
+
+.request-description p {
+  margin: 0;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.request-actions .btn {
+  flex: 1;
+  min-width: 100px;
+}
+
+.resolved-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #28a745;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* High priority requests get a subtle pulse animation */
+.request-card.priority-high.pending::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #e74c3c, transparent, #e74c3c);
+  border-radius: 12px;
+  z-index: -1;
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}

@@ -26,27 +26,183 @@
     </section>
 
     <section id="summary">
-      <h2>Dashboard Summary</h2>
-      <div id="summary-cards">
-        <div class="card" id="tenant-count">Tenants: ...</div>
-        <div class="card" id="request-count">Open Requests: ...</div>
-        <div class="card" id="payment-count">Payments This Month: ...</div>
+      <h2>Financial Analytics</h2>
+      
+      <!-- Key Metrics -->
+      <div class="analytics-cards">
+        <div class="analytics-card revenue">
+          <div class="card-icon">💰</div>
+          <div class="card-content">
+            <h3 id="total-revenue">$0</h3>
+            <p>Total Revenue This Month</p>
+            <span class="trend" id="revenue-trend">+0%</span>
+          </div>
+        </div>
+        
+        <div class="analytics-card collection-rate">
+          <div class="card-icon">📊</div>
+          <div class="card-content">
+            <h3 id="collection-rate">0%</h3>
+            <p>Collection Rate</p>
+            <span class="trend" id="collection-trend">+0%</span>
+          </div>
+        </div>
+        
+        <div class="analytics-card occupancy">
+          <div class="card-icon">🏠</div>
+          <div class="card-content">
+            <h3 id="occupancy-rate">0%</h3>
+            <p>Occupancy Rate</p>
+            <span class="trend" id="occupancy-trend">+0%</span>
+          </div>
+        </div>
+        
+        <div class="analytics-card pending-rent">
+          <div class="card-icon">⏰</div>
+          <div class="card-content">
+            <h3 id="pending-rent">$0</h3>
+            <p>Outstanding Rent</p>
+            <span class="trend" id="pending-trend">-0%</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Financial Overview Chart -->
+      <div class="financial-overview">
+        <div class="overview-section">
+          <h3>Monthly Overview</h3>
+          <div class="month-stats">
+            <div class="stat-item">
+              <label>Expected Revenue:</label>
+              <span id="expected-revenue">$0</span>
+            </div>
+            <div class="stat-item">
+              <label>Collected:</label>
+              <span id="collected-revenue">$0</span>
+            </div>
+            <div class="stat-item">
+              <label>Outstanding:</label>
+              <span id="outstanding-revenue">$0</span>
+            </div>
+            <div class="stat-item">
+              <label>Collection %:</label>
+              <span id="collection-percentage">0%</span>
+            </div>
+          </div>
+          
+          <div class="revenue-bar">
+            <div class="revenue-progress" id="revenue-progress">
+              <div class="collected-bar" id="collected-bar"></div>
+              <div class="outstanding-bar" id="outstanding-bar"></div>
+            </div>
+            <div class="revenue-labels">
+              <span>Collected</span>
+              <span>Outstanding</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <button class="btn btn-primary" onclick="generateReport()">📊 Generate Report</button>
+          <button class="btn btn-secondary" onclick="sendBulkReminders()">📧 Send Reminders</button>
+          <button class="btn btn-success" onclick="exportData()">💾 Export Data</button>
+        </div>
       </div>
     </section>
 
     <section id="tenants">
-      <input type="text" id="tenant-search" placeholder="Search tenants..." />
-      <h2>Tenant List</h2>
-      <div id="tenant-list">Loading tenants...</div>
+      <div class="section-header">
+        <h2>Tenant Overview</h2>
+        <div class="tenant-controls">
+          <input type="text" id="tenant-search" placeholder="Search tenants..." />
+          <select id="tenant-filter">
+            <option value="all">All Tenants</option>
+            <option value="behind">Behind on Rent</option>
+            <option value="current">Current</option>
+            <option value="ahead">Paid Ahead</option>
+          </select>
+          <button id="refresh-tenants" class="refresh-btn">🔄</button>
+        </div>
+      </div>
+      
+      <div class="tenant-summary-cards">
+        <div class="summary-card total-tenants">
+          <div class="card-icon">👥</div>
+          <div class="card-content">
+            <h3 id="total-tenant-count">-</h3>
+            <p>Total Tenants</p>
+          </div>
+        </div>
+        <div class="summary-card behind-rent">
+          <div class="card-icon">⚠️</div>
+          <div class="card-content">
+            <h3 id="behind-count">-</h3>
+            <p>Behind on Rent</p>
+          </div>
+        </div>
+        <div class="summary-card total-owed">
+          <div class="card-icon">💰</div>
+          <div class="card-content">
+            <h3 id="total-owed">-</h3>
+            <p>Total Owed</p>
+          </div>
+        </div>
+        <div class="summary-card monthly-revenue">
+          <div class="card-icon">📊</div>
+          <div class="card-content">
+            <h3 id="monthly-revenue">-</h3>
+            <p>Monthly Revenue</p>
+          </div>
+        </div>
+      </div>
+      
+      <div id="tenant-list" class="tenant-grid">
+        <div class="loading-spinner">Loading tenant data...</div>
+      </div>
     </section>
 
     <section id="requests">
-      <h2>Repair Requests</h2>
-      <div class="request-controls">
-        <label><input type="checkbox" id="filter-unresolved" /> Show only unresolved requests</label>
-        <label><input type="checkbox" id="sort-by-date" /> Sort by newest first</label>
+      <div class="section-header">
+        <h2>Repair Request Management</h2>
+        <div class="request-stats">
+          <span class="stat-badge pending" id="pending-requests">0 Pending</span>
+          <span class="stat-badge resolved" id="resolved-requests">0 Resolved</span>
+        </div>
       </div>
-      <div id="repair-requests">Loading requests...</div>
+      
+      <div class="request-controls">
+        <div class="filter-group">
+          <select id="status-filter">
+            <option value="all">All Requests</option>
+            <option value="pending">Pending Only</option>
+            <option value="resolved">Resolved Only</option>
+          </select>
+          
+          <select id="priority-filter">
+            <option value="all">All Priorities</option>
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+          </select>
+          
+          <input type="text" id="request-search" placeholder="Search requests..." />
+        </div>
+        
+        <div class="sort-group">
+          <select id="sort-requests">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="priority">By Priority</option>
+            <option value="tenant">By Tenant</option>
+          </select>
+          <button id="refresh-requests" class="refresh-btn">🔄</button>
+        </div>
+      </div>
+      
+      <div id="repair-requests" class="requests-grid">
+        <div class="loading-spinner">Loading repair requests...</div>
+      </div>
     </section>
 
     <section id="payments">
