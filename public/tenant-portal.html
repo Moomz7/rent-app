@@ -21,8 +21,49 @@
   
   <main>
     <section id="balance">
-      <h2>Current Rent Balance</h2>
-      <p id="rent-balance">$0.00</p>
+      <div class="balance-header">
+        <h2>Rent Balance Overview</h2>
+        <button id="refresh-balance" class="refresh-btn" title="Refresh Balance">🔄</button>
+      </div>
+      
+      <!-- Main Balance Display -->
+      <div class="balance-card">
+        <div class="balance-main">
+          <h3>Current Balance</h3>
+          <p id="rent-balance" class="balance-amount">Loading...</p>
+          <p id="balance-status" class="balance-status"></p>
+        </div>
+        
+        <!-- Balance Details -->
+        <div class="balance-details">
+          <div class="detail-grid">
+            <div class="detail-item">
+              <label>Monthly Rent:</label>
+              <span id="monthly-rent">-</span>
+            </div>
+            <div class="detail-item">
+              <label>Total Paid:</label>
+              <span id="total-paid">-</span>
+            </div>
+            <div class="detail-item">
+              <label>Lease Started:</label>
+              <span id="lease-start">-</span>
+            </div>
+            <div class="detail-item">
+              <label>Next Due:</label>
+              <span id="next-due">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Payment History -->
+      <div class="payment-history-card">
+        <h3>Recent Payments</h3>
+        <div id="payment-history" class="payment-history">
+          Loading payment history...
+        </div>
+      </div>
     </section>
     
 
