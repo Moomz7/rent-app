@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadTenantData(),
     loadRepairRequests(),
     loadPaymentHistory(),
+    loadPropertyData(),
     loadFinancialAnalytics()
   ]);
 
@@ -576,6 +577,136 @@ function sendBulkReminders() {
 function exportData() {
   showToast('💾 Exporting data to CSV...');
   // TODO: Implement data export
+}
+
+// Load property data
+async function loadPropertyData() {
+  try {
+    const response = await fetch('/api/properties');
+    if (!response.ok) throw new Error('Failed to fetch properties');
+    
+    const properties = await response.json();
+    displayProperties(properties);
+    updatePropertyStats(properties);
+    
+    // Load unassigned tenants
+    const unassignedResponse = await fetch('/api/unassigned-tenants');
+    const unassignedTenants = await unassignedResponse.json();
+    updateUnassignedCount(unassignedTenants.length);
+    
+  } catch (error) {
+    console.error('Error loading properties:', error);
+    document.getElementById('property-list').innerHTML = 
+      '<div class="error-message">Error loading properties</div>';
+  }
+}
+
+// Display properties
+function displayProperties(properties) {
+  const propertyList = document.getElementById('property-list');
+  
+  if (!properties || properties.length === 0) {
+    propertyList.innerHTML = `
+      <div class="empty-state">
+        <h3>No Properties Added</h3>
+        <p>Add your first property to start managing tenants</p>
+        <button onclick="openAddPropertyModal()" class="btn btn-primary">Add Property</button>
+      </div>
+    `;
+    return;
+  }
+  
+  const propertiesHtml = properties.map(property => {
+    const occupancyRate = property.totalUnits > 0 ? 
+      (property.tenantCount / property.totalUnits * 100).toFixed(0) : 0;
+    
+    return `
+      <div class="property-card">
+        <div class="property-header">
+          <h3>${property.propertyName || 'Unnamed Property'}</h3>
+          <span class="property-type">${property.propertyType}</span>
+        </div>
+        
+        <div class="property-address">
+          <p>📍 ${property.address.street}</p>
+          <p>${property.address.city}, ${property.address.state} ${property.address.zipCode}</p>
+        </div>
+        
+        <div class="property-stats">
+          <div class="stat-row">
+            <span>Total Units:</span>
+            <span>${property.totalUnits}</span>
+          </div>
+          <div class="stat-row">
+            <span>Occupied:</span>
+            <span>${property.tenantCount}</span>
+          </div>
+          <div class="stat-row">
+            <span>Occupancy Rate:</span>
+            <span>${occupancyRate}%</span>
+          </div>
+          ${property.baseRent ? `
+            <div class="stat-row">
+              <span>Base Rent:</span>
+              <span>$${property.baseRent.toFixed(2)}</span>
+            </div>
+          ` : ''}
+        </div>
+        
+        <div class="property-actions">
+          <button class="btn btn-sm" onclick="viewPropertyTenants('${property._id}')">
+            👥 View Tenants
+          </button>
+          <button class="btn btn-sm btn-secondary" onclick="editProperty('${property._id}')">
+            ✏️ Edit
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  propertyList.innerHTML = propertiesHtml;
+}
+
+// Update property statistics
+function updatePropertyStats(properties) {
+  const totalProperties = properties.length;
+  const totalUnits = properties.reduce((sum, p) => sum + (p.totalUnits || 0), 0);
+  const occupiedUnits = properties.reduce((sum, p) => sum + (p.tenantCount || 0), 0);
+  
+  document.getElementById('total-properties').textContent = totalProperties;
+  document.getElementById('total-units').textContent = totalUnits;
+  document.getElementById('occupied-units').textContent = occupiedUnits;
+}
+
+// Update unassigned tenant count
+function updateUnassignedCount(count) {
+  const element = document.getElementById('unassigned-tenants');
+  element.textContent = count;
+  
+  // Highlight if there are unassigned tenants
+  const statCard = element.parentElement;
+  if (count > 0) {
+    statCard.classList.add('alert');
+  } else {
+    statCard.classList.remove('alert');
+  }
+}
+
+// Property management functions
+function openAddPropertyModal() {
+  showToast('🏠 Add Property feature coming soon...');
+  // TODO: Implement add property modal
+}
+
+function viewPropertyTenants(propertyId) {
+  showToast(`👥 Loading tenants for property ${propertyId}...`);
+  // TODO: Implement property tenant view
+}
+
+function editProperty(propertyId) {
+  showToast(`✏️ Edit property feature coming soon...`);
+  // TODO: Implement property editing
 }
 
 // Show toast notification

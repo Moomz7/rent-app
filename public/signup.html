@@ -10,23 +10,124 @@
 <body>
   <h1>Create an Account</h1>
 
-  <form method="POST" action="/signup">
-    <label>Username:
-      <input type="text" name="username" required style="text-transform: lowercase;" />
-    </label><br />
+  <form method="POST" action="/signup" id="signup-form">
+    <!-- Basic Information -->
+    <fieldset class="form-section">
+      <legend>Basic Information</legend>
+      
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required style="text-transform: lowercase;" />
+      </div>
 
-    <label>Password:
-      <input type="password" name="password" required />
-    </label><br />
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
 
-    <label>Role:
-      <select name="role" required>
-        <option value="tenant">Tenant</option>
-        <option value="landlord">Landlord</option>
-      </select>
-    </label><br />
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="6" />
+      </div>
 
-    <button type="submit">Sign Up</button>
+      <div class="form-group">
+        <label for="role">I am a:</label>
+        <select id="role" name="role" required>
+          <option value="">Select your role</option>
+          <option value="tenant">Tenant (I rent a property)</option>
+          <option value="landlord">Landlord (I own rental properties)</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <!-- Address Information -->
+    <fieldset class="form-section">
+      <legend>Address Information</legend>
+      
+      <div class="form-group">
+        <label for="street">Street Address:</label>
+        <input type="text" id="street" name="address.street" required 
+               placeholder="123 Main Street" />
+        <small class="form-help" id="street-help">Enter the full street address</small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City:</label>
+          <input type="text" id="city" name="address.city" required 
+                 placeholder="New York" />
+        </div>
+
+        <div class="form-group">
+          <label for="state">State:</label>
+          <select id="state" name="address.state" required>
+            <option value="">Select State</option>
+            <option value="AL">Alabama</option>
+            <option value="CA">California</option>
+            <option value="FL">Florida</option>
+            <option value="NY">New York</option>
+            <option value="TX">Texas</option>
+            <!-- Add more states as needed -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="zipCode">ZIP Code:</label>
+          <input type="text" id="zipCode" name="address.zipCode" required 
+                 pattern="[0-9]{5}(-[0-9]{4})?" placeholder="12345" />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Role-specific fields -->
+    <fieldset class="form-section" id="tenant-fields" style="display: none;">
+      <legend>Tenant Information</legend>
+      
+      <div class="form-group">
+        <label for="unitNumber">Unit/Apartment Number (if applicable):</label>
+        <input type="text" id="unitNumber" name="unitNumber" 
+               placeholder="Apt 2B, Unit 101, etc." />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="monthlyRent">Monthly Rent:</label>
+          <input type="number" id="monthlyRent" name="monthlyRent" 
+                 min="0" step="0.01" placeholder="1200.00" />
+        </div>
+
+        <div class="form-group">
+          <label for="leaseStart">Lease Start Date:</label>
+          <input type="date" id="leaseStart" name="leaseStart" />
+        </div>
+      </div>
+
+      <div class="tenant-note">
+        <p><strong>Note:</strong> You will be automatically assigned to your landlord based on your property address.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section" id="landlord-fields" style="display: none;">
+      <legend>Landlord Information</legend>
+      
+      <div class="form-group">
+        <label for="businessName">Business Name (optional):</label>
+        <input type="text" id="businessName" name="businessName" 
+               placeholder="ABC Property Management" />
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" 
+               placeholder="(555) 123-4567" />
+      </div>
+
+      <div class="landlord-note">
+        <p><strong>Note:</strong> The address above should be one of your rental properties. You can add more properties after signing up.</p>
+      </div>
+    </fieldset>
+
+    <button type="submit" id="submit-btn">Create Account</button>
   </form>
 
   <p>Already have an account? <a href="/login.html">Log in</a></p>
@@ -35,27 +136,128 @@
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const usernameInput = document.querySelector('input[name="username"]');
+      const roleSelect = document.getElementById('role');
+      const tenantFields = document.getElementById('tenant-fields');
+      const landlordFields = document.getElementById('landlord-fields');
+      const streetHelp = document.getElementById('street-help');
 
       // Enforce lowercase input
       usernameInput.addEventListener('input', e => {
         e.target.value = e.target.value.toLowerCase();
       });
 
-      // Dynamic feedback
+      // Show/hide role-specific fields
+      roleSelect.addEventListener('change', (e) => {
+        const selectedRole = e.target.value;
+        
+        if (selectedRole === 'tenant') {
+          tenantFields.style.display = 'block';
+          landlordFields.style.display = 'none';
+          streetHelp.textContent = 'Enter the address of the property you rent';
+          
+          // Make tenant fields required
+          document.getElementById('monthlyRent').required = true;
+          document.getElementById('leaseStart').required = true;
+        } else if (selectedRole === 'landlord') {
+          tenantFields.style.display = 'none';
+          landlordFields.style.display = 'block';
+          streetHelp.textContent = 'Enter the address of one of your rental properties';
+          
+          // Remove required from tenant fields
+          document.getElementById('monthlyRent').required = false;
+          document.getElementById('leaseStart').required = false;
+          
+          // Make landlord fields required
+          document.getElementById('phoneNumber').required = true;
+        } else {
+          tenantFields.style.display = 'none';
+          landlordFields.style.display = 'none';
+          streetHelp.textContent = 'Enter the full street address';
+        }
+      });
+
+      // Format phone number
+      document.getElementById('phoneNumber')?.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 6) {
+          value = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 10)}`;
+        } else if (value.length >= 3) {
+          value = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+        }
+        e.target.value = value;
+      });
+
+      // Format ZIP code
+      document.getElementById('zipCode').addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 5) {
+          value = `${value.substring(0, 5)}-${value.substring(5, 9)}`;
+        }
+        e.target.value = value;
+      });
+
+      // Form submission validation
+      document.getElementById('signup-form').addEventListener('submit', (e) => {
+        const role = roleSelect.value;
+        if (!role) {
+          e.preventDefault();
+          alert('Please select whether you are a tenant or landlord');
+          return;
+        }
+
+        // Validate required fields based on role
+        if (role === 'tenant') {
+          const monthlyRent = document.getElementById('monthlyRent').value;
+          const leaseStart = document.getElementById('leaseStart').value;
+          
+          if (!monthlyRent || !leaseStart) {
+            e.preventDefault();
+            alert('Please fill in monthly rent and lease start date');
+            return;
+          }
+        } else if (role === 'landlord') {
+          const phoneNumber = document.getElementById('phoneNumber').value;
+          
+          if (!phoneNumber) {
+            e.preventDefault();
+            alert('Please provide a phone number');
+            return;
+          }
+        }
+      });
+
+      // Dynamic feedback for errors
       if (params.get('error') === 'exists') {
-        const msg = document.createElement('p');
-        msg.textContent = '❌ That email is already registered.';
-        msg.style.color = 'red';
-        document.body.prepend(msg);
+        showMessage('❌ That username or email is already registered.', 'error');
       }
 
       if (params.get('error') === 'server') {
-        const msg = document.createElement('p');
-        msg.textContent = '⚠️ Server error. Please try again.';
-        msg.style.color = 'orange';
-        document.body.prepend(msg);
+        showMessage('⚠️ Server error. Please try again.', 'warning');
+      }
+
+      if (params.get('success') === 'created') {
+        showMessage('✅ Account created successfully! Please log in.', 'success');
       }
     });
+
+    function showMessage(text, type) {
+      const msg = document.createElement('div');
+      msg.textContent = text;
+      msg.className = `message ${type}`;
+      msg.style.cssText = `
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+        font-weight: bold;
+        ${type === 'error' ? 'background: #fee; color: #c33; border: 1px solid #fcc;' : ''}
+        ${type === 'warning' ? 'background: #fff3cd; color: #856404; border: 1px solid #ffeaa7;' : ''}
+        ${type === 'success' ? 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : ''}
+      `;
+      document.body.insertBefore(msg, document.querySelector('form'));
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => msg.remove(), 5000);
+    }
   </script>
 </body>
 </html>
