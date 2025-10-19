@@ -696,29 +696,69 @@ function updateUnassignedCount(count) {
 // Property management functions
 function openAddPropertyModal() {
   const modal = document.getElementById('add-property-modal');
-  modal.style.display = 'block';
-  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  if (modal) {
+    modal.classList.add('show');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
 }
 
 function closeAddPropertyModal() {
   const modal = document.getElementById('add-property-modal');
-  modal.style.display = 'none';
-  document.body.style.overflow = 'auto';
-  
-  // Reset form
-  document.getElementById('add-property-form').reset();
+  if (modal) {
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Reset form
+    const form = document.getElementById('add-property-form');
+    if (form) {
+      form.reset();
+    }
+    
+    // Reset any button states
+    const submitBtn = form?.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.textContent = 'Add Property';
+      submitBtn.disabled = false;
+    }
+  }
 }
 
-// Handle form submission
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize modal functionality
+function initializePropertyModal() {
   const form = document.getElementById('add-property-form');
+  const modal = document.getElementById('add-property-modal');
+  
+  // Ensure modal is hidden initially
+  if (modal) {
+    modal.style.display = 'none';
+    modal.classList.remove('show');
+  }
+  
   if (form) {
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       await handleAddProperty(e);
     });
   }
-});
+  
+  // Close modal when clicking outside of it
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeAddPropertyModal();
+      }
+    });
+  }
+  
+  // Handle escape key to close modal
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && modal.style.display === 'block') {
+      closeAddPropertyModal();
+    }
+  });
+}
 
 async function handleAddProperty(e) {
   const form = e.target;
@@ -738,6 +778,8 @@ async function handleAddProperty(e) {
     }
   };
   
+  console.log('Submitting property data:', propertyData);
+  
   try {
     // Show loading state
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -753,27 +795,34 @@ async function handleAddProperty(e) {
       body: JSON.stringify(propertyData)
     });
     
+    const result = await response.json();
+    console.log('Server response:', result);
+    
     if (!response.ok) {
-      throw new Error('Failed to add property');
+      throw new Error(result.error || 'Failed to add property');
     }
     
-    const result = await response.json();
-    
-    // Success - close modal and refresh data
-    closeAddPropertyModal();
+    // Success - show toast, close modal and refresh data
     showToast('✅ Property added successfully!');
+    
+    // Small delay to show the toast before closing
+    setTimeout(() => {
+      closeAddPropertyModal();
+    }, 100);
     
     // Refresh property data
     await loadPropertyData();
     
   } catch (error) {
     console.error('Error adding property:', error);
-    showToast('❌ Error adding property. Please try again.');
-  } finally {
-    // Reset button
+    showToast(`❌ Error: ${error.message}`);
+    
+    // Reset button state on error
     const submitBtn = form.querySelector('button[type="submit"]');
-    submitBtn.textContent = 'Add Property';
-    submitBtn.disabled = false;
+    if (submitBtn) {
+      submitBtn.textContent = 'Add Property';
+      submitBtn.disabled = false;
+    }
   }
 }
 
@@ -811,7 +860,7 @@ function showToast(message) {
   }, 3000);
 }
 
-// Logout confirmation
+// Logout confirmation and modal initialization
 document.addEventListener('DOMContentLoaded', () => {
   const logoutLink = document.getElementById('logout-link');
   if (logoutLink) {
@@ -822,4 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  
+  // Initialize property modal
+  initializePropertyModal();
 });
