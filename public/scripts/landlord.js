@@ -695,8 +695,86 @@ function updateUnassignedCount(count) {
 
 // Property management functions
 function openAddPropertyModal() {
-  showToast('🏠 Add Property feature coming soon...');
-  // TODO: Implement add property modal
+  const modal = document.getElementById('add-property-modal');
+  modal.style.display = 'block';
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeAddPropertyModal() {
+  const modal = document.getElementById('add-property-modal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+  
+  // Reset form
+  document.getElementById('add-property-form').reset();
+}
+
+// Handle form submission
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('add-property-form');
+  if (form) {
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      await handleAddProperty(e);
+    });
+  }
+});
+
+async function handleAddProperty(e) {
+  const form = e.target;
+  const formData = new FormData(form);
+  
+  // Build property object
+  const propertyData = {
+    propertyName: formData.get('propertyName'),
+    propertyType: formData.get('propertyType'),
+    totalUnits: parseInt(formData.get('totalUnits')),
+    baseRent: formData.get('baseRent') ? parseFloat(formData.get('baseRent')) : null,
+    address: {
+      street: formData.get('street'),
+      city: formData.get('city'),
+      state: formData.get('state'),
+      zipCode: formData.get('zipCode')
+    }
+  };
+  
+  try {
+    // Show loading state
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Adding Property...';
+    submitBtn.disabled = true;
+    
+    const response = await fetch('/api/properties', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(propertyData)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to add property');
+    }
+    
+    const result = await response.json();
+    
+    // Success - close modal and refresh data
+    closeAddPropertyModal();
+    showToast('✅ Property added successfully!');
+    
+    // Refresh property data
+    await loadPropertyData();
+    
+  } catch (error) {
+    console.error('Error adding property:', error);
+    showToast('❌ Error adding property. Please try again.');
+  } finally {
+    // Reset button
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.textContent = 'Add Property';
+    submitBtn.disabled = false;
+  }
 }
 
 function viewPropertyTenants(propertyId) {

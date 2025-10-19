@@ -256,6 +256,148 @@
 <section id="requests-container"></section>
 <section id="payments-container"></section>
 
+  <!-- Add Property Modal -->
+  <div id="add-property-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Property</h3>
+        <span class="close-modal" onclick="closeAddPropertyModal()">&times;</span>
+      </div>
+      
+      <form id="add-property-form">
+        <div class="form-section">
+          <h4>Property Information</h4>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="property-name">Property Name *</label>
+              <input type="text" id="property-name" name="propertyName" required 
+                     placeholder="e.g., Sunset Apartments">
+            </div>
+            
+            <div class="form-group">
+              <label for="property-type">Property Type *</label>
+              <select id="property-type" name="propertyType" required>
+                <option value="">Select Type</option>
+                <option value="Apartment">Apartment Building</option>
+                <option value="House">Single House</option>
+                <option value="Duplex">Duplex</option>
+                <option value="Townhouse">Townhouse</option>
+                <option value="Condo">Condominium</option>
+                <option value="Commercial">Commercial Property</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="total-units">Total Units *</label>
+              <input type="number" id="total-units" name="totalUnits" min="1" max="1000" required
+                     placeholder="Number of rental units">
+            </div>
+            
+            <div class="form-group">
+              <label for="base-rent">Base Rent ($)</label>
+              <input type="number" id="base-rent" name="baseRent" min="0" step="0.01"
+                     placeholder="Optional base rent amount">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>Property Address</h4>
+          
+          <div class="form-group">
+            <label for="property-street">Street Address *</label>
+            <input type="text" id="property-street" name="street" required
+                   placeholder="123 Main Street, Apt 4B">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="property-city">City *</label>
+              <input type="text" id="property-city" name="city" required
+                     placeholder="City name">
+            </div>
+            
+            <div class="form-group">
+              <label for="property-state">State *</label>
+              <select id="property-state" name="state" required>
+                <option value="">Select State</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option>
+                <option value="CA">California</option>
+                <option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option>
+                <option value="DE">Delaware</option>
+                <option value="FL">Florida</option>
+                <option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option>
+                <option value="IL">Illinois</option>
+                <option value="IN">Indiana</option>
+                <option value="IA">Iowa</option>
+                <option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option>
+                <option value="ME">Maine</option>
+                <option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option>
+                <option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option>
+                <option value="MT">Montana</option>
+                <option value="NE">Nebraska</option>
+                <option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option>
+                <option value="NY">New York</option>
+                <option value="NC">North Carolina</option>
+                <option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option>
+                <option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option>
+                <option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option>
+                <option value="TX">Texas</option>
+                <option value="UT">Utah</option>
+                <option value="VT">Vermont</option>
+                <option value="VA">Virginia</option>
+                <option value="WA">Washington</option>
+                <option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option>
+                <option value="WY">Wyoming</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="property-zip">ZIP Code *</label>
+              <input type="text" id="property-zip" name="zipCode" required
+                     pattern="[0-9]{5}(-[0-9]{4})?" placeholder="12345 or 12345-6789">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeAddPropertyModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Add Property
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="scripts/landlord.min.js" defer></script>
 </body>
 </html>

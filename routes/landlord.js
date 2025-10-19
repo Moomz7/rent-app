@@ -58,6 +58,87 @@ router.get('/api/unassigned-tenants', ensureLandlord, async (req, res) => {
   }
 });
 
+// Create a new property for the logged-in landlord
+router.post('/api/properties', ensureLandlord, async (req, res) => {
+  try {
+    const { propertyName, propertyType, totalUnits, baseRent, address } = req.body;
+    
+    // Validate required fields
+    if (!propertyName || !propertyType || !totalUnits || !address || 
+        !address.street || !address.city || !address.state || !address.zipCode) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    // Validate totalUnits is a positive number
+    if (totalUnits < 1 || totalUnits > 1000) {
+      return res.status(400).json({ error: 'Total units must be between 1 and 1000' });
+    }
+    
+    // Create new property
+    const newProperty = new Property({
+      landlordId: req.user._id,
+      propertyName: propertyName.trim(),
+      propertyType,
+      totalUnits: parseInt(totalUnits),
+      baseRent: baseRent ? parseFloat(baseRent) : null,
+      address: {
+        street: address.street.trim(),
+        city: address.city.trim(),
+        state: address.state,
+        zipCode: address.zipCode.trim()
+      }
+    });
+    
+    const savedProperty = await newProperty.save();
+    
+    // After creating property, check for existing tenants that match this address
+    const normalizedAddress = Property.normalizeAddress({
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode
+    });
+    
+    // Find unassigned tenants with matching addresses
+    const matchingTenants = await User.find({
+      role: 'tenant',
+      $or: [
+        { assignedPropertyId: { $exists: false } },
+        { assignedPropertyId: null }
+      ],
+      normalizedAddress: normalizedAddress
+    });
+    
+    // Assign matching tenants to this property
+    if (matchingTenants.length > 0) {
+      await User.updateMany(
+        { _id: { $in: matchingTenants.map(t => t._id) } },
+        { 
+          assignedPropertyId: savedProperty._id,
+          assignedLandlordId: req.user._id 
+        }
+      );
+      
+      console.log(`Auto-assigned ${matchingTenants.length} tenants to new property: ${propertyName}`);
+    }
+    
+    res.status(201).json({
+      success: true,
+      property: savedProperty,
+      assignedTenants: matchingTenants.length
+    });
+    
+  } catch (error) {
+    console.error('Error creating property:', error);
+    
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: 'Invalid property data' });
+    }
+    
+    res.status(500).json({ error: 'Failed to create property' });
+  }
+});
+
 // Get tenants assigned to this landlord with their balances and due dates
 router.get('/api/tenants/balances', ensureLandlord, async (req, res) => {
   try {
